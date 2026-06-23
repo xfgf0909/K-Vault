@@ -358,11 +358,10 @@ async function sendToTelegram(formData, apiEndpoint, env, retryCount = 0) {
       return { success: false, error: "Telegram file size limit exceeded." };
     }
 
-    if (retryCount < maxRetries && (apiEndpoint === "sendPhoto" || apiEndpoint === "sendAudio")) {
+    if (retryCount < maxRetries && apiEndpoint === "sendAudio") {
       const newFormData = new FormData();
       newFormData.append("chat_id", formData.get("chat_id"));
-      const fileField = apiEndpoint === "sendPhoto" ? "photo" : "audio";
-      newFormData.append("document", formData.get(fileField));
+      newFormData.append("document", formData.get("audio"));
       return sendToTelegram(newFormData, "sendDocument", env, retryCount + 1);
     }
 
